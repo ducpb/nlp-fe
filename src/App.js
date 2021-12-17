@@ -6,16 +6,18 @@ import axios from "axios";
 
 const { Title } = Typography;
 
-const URL_ENDPINT = "";
+const URL_ENDPINT = "http://localhost:5000";
 
 export const processTextAPI = (text) => {
   const config = {
-    text: text,
+    string: text,
   };
 
   return axios
-    .post(URL_ENDPINT + "/process", config)
-    .then((response) => {})
+    .post(URL_ENDPINT + "/postData", config)
+    .then((response) => {
+      return response.data.result;
+    })
     .catch((response) => {
       console.log(response);
     });
@@ -33,7 +35,7 @@ function App() {
     processTextAPI(text).then((result) => {
       setTimeout(() => {
         setSpinning(false);
-        setResult(text);
+        setResult(result);
       }, 2500);
     });
   };
