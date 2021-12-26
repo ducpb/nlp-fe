@@ -1,16 +1,22 @@
-import "./App.css";
-import "antd/dist/antd.css";
-import { Button, Col, Input, Row, Spin, Typography } from "antd";
+import { Button, Col, Input, Row, Spin, Typography, Radio, Space } from "antd";
+
 import { useState } from "react";
+
 import axios from "axios";
+
+import "./App.css";
+
+import "antd/dist/antd.css";
 
 const { Title } = Typography;
 
 const URL_ENDPINT = "http://localhost:5000";
 
-export const processTextAPI = (text) => {
+export const processTextAPI = (text, restore_tone, keep_special_character) => {
   const config = {
     string: text,
+    restore_tone: restore_tone === "true",
+    keep_special_character: keep_special_character === "true"
   };
 
   return axios
@@ -27,12 +33,14 @@ function App() {
   const [text, setText] = useState(null);
   const [result, setResult] = useState(null);
   const [spinning, setSpinning] = useState(false);
+  const [a, setA] = useState("false");
+  const [b, setB] = useState("false");
 
   const onChangeText = (e) => setText(e);
 
   const processText = () => {
     setSpinning(true);
-    processTextAPI(text).then((result) => {
+    processTextAPI(text, a, b).then((result) => {
       setTimeout(() => {
         setSpinning(false);
         setResult(result);
@@ -55,6 +63,50 @@ function App() {
               </Title>
             </Col>
           </Row>
+        </Row>
+
+        <Row
+          style={{ marginBottom: "20px" }}
+          type="flex"
+          justify="center"
+          align="middle"
+          gutter={[16, { xs: 8, sm: 16, md: 24, lg: 32 }]}
+        >
+          <Col span={12}>
+            <Row>
+              <div className="title">Giữ nguyên những câu có dấu sẵn trong câu?</div>
+            </Row>
+            <Row>
+              <Radio.Group defaultValue="false">
+                <Space direction="vertical" onChange={e => setA(e.target.value)}>
+                  <Radio value="true">Yes</Radio>
+                  <Radio value="false">No</Radio>
+                </Space>
+              </Radio.Group>
+            </Row>
+          </Col>
+        </Row>
+
+        <Row
+          style={{ marginBottom: "20px" }}
+          type="flex"
+          justify="center"
+          align="middle"
+          gutter={[16, { xs: 8, sm: 16, md: 24, lg: 32 }]}
+        >
+          <Col span={12}>
+            <Row>
+              <div className="title">Giữ những ký tự lạ trong câu?</div>
+            </Row>
+            <Row>
+              <Radio.Group defaultValue="false">
+                <Space direction="vertical" onChange={e => setB(e.target.value)}>
+                  <Radio value="true">Yes</Radio>
+                  <Radio value="false">No</Radio>
+                </Space>
+              </Radio.Group>
+            </Row>
+          </Col>
         </Row>
 
         <Row
